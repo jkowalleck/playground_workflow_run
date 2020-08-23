@@ -1,0 +1,74 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: TESTS RUN
+
+on:
+  push:
+
+env:
+  FOO_ENV_VAR: tests
+
+jobs:
+  create-reports:
+    name: create artifact reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: create articact folder
+        run: mkdir reports
+      - name: create dummy reports
+        run: date > reports/date
+      - name: upload artifacts
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: ./reports/
+
+  process-reports:
+    name: process artifact reports
+    needs: create-reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: fetch reports
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: reports
+          path: ./reports/
+      - name: read dummy reports
+        run: cat reports/date
+
+  debug:
+    name: DEBUG
+    runs-on: ubuntu-latest
+    steps:
+      # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+      - run: echo "$CONTEXT"
+        name: github
+        env:
+          CONTEXT:  ${{ toJson(github) }}
+      - run: echo "$CONTEXT"
+        name: env
+        env:
+          CONTEXT:  ${{ toJson(env) }}
+      - run: echo "$CONTEXT"
+        name: runner
+        env:
+          CONTEXT:  ${{ toJson(runner) }}
+      - run: echo "$CONTEXT"
+        name: strategy
+        env:
+          CONTEXT:  ${{ toJson(strategy) }}
+      - run: echo "$CONTEXT"
+        name: matrix
+        env:
+          CONTEXT:  ${{ toJson(matrix) }}
+      - run: echo "$CONTEXT"
+        name: needs
+        env:
+          CONTEXT:  ${{ toJson(needs) }}
+      - run: echo "$CONTEXT"
+        name: secrets
+        env:
+          CONTEXT:  ${{ toJson(secrets) }}
