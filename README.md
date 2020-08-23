@@ -18,6 +18,8 @@ i can download artifacts from the workflow that triggered the "[worgkflow_run]" 
 
 the action "[download-artifact]" semas to be broken on event "[worgkflow_run]".
 
+see https://github.com/actions/download-artifact/issues/60
+
 ## obeservations
 
 * upload artifact in a "push"-event workflow [works as expected][action_results_tests_run].
